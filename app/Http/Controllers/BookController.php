@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class BookController extends Controller
 {
@@ -12,4 +13,26 @@ class BookController extends Controller
         $books = Book::latest()->get();
         return view('books.index', compact('books'));
     }
+
+    public function create()
+    {
+        return view('books.create');
+    }
+
+    public function store(Request $request)
+    {
+        Book::create($this->validated($request));
+        return redirect()->route('books.index');
+    }
+
+    private function validated(Request $request): array
+    {
+        return $request->validate([
+            'title'  => ['required', 'string', 'max:255'],
+            'author' => ['required', 'string', 'max:255'],
+            'status' => ['required', Rule::in(array_keys(Book::STATUSES))],
+        ]);
+    }
 }
+
+

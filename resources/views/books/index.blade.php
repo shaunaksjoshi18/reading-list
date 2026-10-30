@@ -1,6 +1,8 @@
 @extends('layout')
 
 @section('content')
+    <p><a href="{{ route('books.create') }}">Add book</a></p>
+
     @if ($books->isEmpty())
         <p>No books yet</p>
     @else
