@@ -1,58 +1,136 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<div align="center">
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# 📚 My Reading List
 
-## About Laravel
+**Track the books you want to read, are reading, and have finished.**
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+[Features](#-features) · [Screenshots](#-screenshots) · [Run it](#-how-to-run) · [Routes](#-routes) · [Database](#-database) · [AI usage](#-ai-usage)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+</div>
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## ✨ About
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+A small Laravel app for keeping track of books. You can add, edit and delete books, filter the list by status, and search by title or author. No login is needed.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## 🚀 Features
 
-## Agentic Development
+| | Feature | Details |
+|---|---------|---------|
+| 📖 | **List books** | Title, author and a coloured status badge |
+| ➕ | **Add a book** | Form with title, author and status |
+| ✏️ | **Edit a book** | Same form, pre-filled with current values |
+| 🗑️ | **Delete a book** | Asks "Are you sure?" before deleting |
+| 🏷️ | **Filter by status** | All, To read, Reading, Finished (`/books?status=reading`) |
+| ✅ | **Validation** | Error messages shown, typed input kept |
+| 🔍 | **Search (extra)** | By title or author, works together with the filter |
+| 🎨 | **Clean design (extra)** | Responsive layout in plain CSS, no npm needed |
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+
+## ⚙️ How to run
+
+You need **PHP**, **Composer** and **Git** installed.
 
 ```bash
-composer require laravel/boost --dev
+# 1. Get the code
+git clone https://github.com/YOURNAME/reading-list.git
+cd reading-list
 
-php artisan boost:install
+# 2. Install dependencies
+composer install
+
+# 3. Set up the environment file and app key
+cp .env.example .env
+php artisan key:generate
+
+# 4. Create the SQLite database file
+#    Mac/Linux:
+touch database/database.sqlite
+#    Windows (PowerShell):
+New-Item database/database.sqlite -ItemType File
+
+# 5. Create the tables
+php artisan migrate
+
+# 6. Start the app
+php artisan serve
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Then open **http://127.0.0.1:8000** in your browser.
 
-## Contributing
+> The default `.env.example` already uses SQLite, so no database settings need changing.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🛣️ Routes
 
-## Code of Conduct
+| Method | URL | What it does |
+|--------|-----|--------------|
+| `GET` | `/books` | List books (supports `?status=` and `?search=`) |
+| `GET` | `/books/create` | Show the add form |
+| `POST` | `/books` | Save a new book |
+| `GET` | `/books/{book}/edit` | Show the edit form |
+| `PUT` | `/books/{book}` | Save changes to a book |
+| `DELETE` | `/books/{book}` | Delete a book |
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+`/` redirects to `/books`. The routes come from `Route::resource('books', BookController::class)`, without the unused `show` route.
 
-## Security Vulnerabilities
+## 🗄️ Database
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+One table, `books`:
 
-## License
+| Column | Type | Notes |
+|--------|------|-------|
+| `id` | integer | primary key |
+| `title` | string | required |
+| `author` | string | required |
+| `status` | string | `to-read`, `reading` or `finished` (default `to-read`) |
+| `created_at`, `updated_at` | timestamps | added by Laravel |
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 🛡️ Validation
+
+- `title`: required, max 255 characters
+- `author`: required, max 255 characters
+- `status`: required, one of `to-read`, `reading`, `finished`
+
+Adding and editing share the same rules through one `validated()` method in `BookController`.
+
+## 📁 Project structure
+
+```
+app/
+├── Models/Book.php                      model + allowed statuses
+└── Http/Controllers/BookController.php  index, create, store, edit, update, destroy
+database/migrations/                     create_books_table
+routes/web.php                           resource routes
+resources/views/
+├── layout.blade.php                     page layout + CSS
+└── books/
+    ├── index.blade.php                  list, filter, search
+    ├── create.blade.php                 add page
+    ├── edit.blade.php                   edit page
+    └── form.blade.php                   fields shared by add and edit
+```
+
+## 🪜 How I built it
+
+I built the app one step at a time and committed after each one: project setup, books table and model, list page, add form, edit, delete, status filter, design, search, and this README. The commit history shows the order.
+
+## 🤖 AI usage
+
+- I used Claude to get a step-by-step plan and to draft the controller, Blade views and CSS.
+- I used it to explain git and GitHub, and to fix errors while setting up.
+- I read and tested every part in the browser (add, edit, delete with confirmation, validation errors, filter and search).
+
+---
+
+<div align="center">
+
+Made by **Shaunak Joshi** · Ramdeobaba University
+
+</div>
