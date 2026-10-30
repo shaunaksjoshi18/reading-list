@@ -8,10 +8,16 @@ use Illuminate\Validation\Rule;
 
 class BookController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $books = Book::latest()->get();
-        return view('books.index', compact('books'));
+        $status = $request->query('status');
+
+        $books = Book::query()
+            ->when(array_key_exists((string) $status, Book::STATUSES), fn ($q) => $q->where('status', $status))
+            ->latest()
+            ->get();
+
+        return view('books.index', compact('books', 'status'));
     }
 
     public function create()
@@ -36,7 +42,7 @@ class BookController extends Controller
         return redirect()->route('books.index');
     }
 
-        public function destroy(Book $book)
+    public function destroy(Book $book)
     {
         $book->delete();
         return redirect()->route('books.index');
@@ -51,6 +57,8 @@ class BookController extends Controller
         ]);
     }
 }
+
+
 
 
 

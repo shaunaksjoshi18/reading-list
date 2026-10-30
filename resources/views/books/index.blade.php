@@ -3,6 +3,13 @@
 @section('content')
     <p><a href="{{ route('books.create') }}">Add book</a></p>
 
+    <p class="filters">
+        <a href="{{ route('books.index') }}" @class(['active' => !$status])>All</a>
+        @foreach (\App\Models\Book::STATUSES as $value => $label)
+            <a href="{{ route('books.index', ['status' => $value]) }}" @class(['active' => $status === $value])>{{ $label }}</a>
+        @endforeach
+    </p>
+
     @if ($books->isEmpty())
         <p>No books yet</p>
     @else
@@ -27,6 +34,10 @@
         </table>
     @endif
 @endsection
+
+
+
+
 
 
 
