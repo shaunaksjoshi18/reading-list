@@ -25,6 +25,17 @@ class BookController extends Controller
         return redirect()->route('books.index');
     }
 
+    public function edit(Book $book)
+    {
+        return view('books.edit', compact('book'));
+    }
+
+    public function update(Request $request, Book $book)
+    {
+        $book->update($this->validated($request));
+        return redirect()->route('books.index');
+    }
+
     private function validated(Request $request): array
     {
         return $request->validate([
@@ -34,5 +45,7 @@ class BookController extends Controller
         ]);
     }
 }
+
+
 
 
