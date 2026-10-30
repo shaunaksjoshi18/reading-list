@@ -11,13 +11,18 @@ class BookController extends Controller
     public function index(Request $request)
     {
         $status = $request->query('status');
+        $search = trim((string) $request->query('search', ''));
 
         $books = Book::query()
             ->when(array_key_exists((string) $status, Book::STATUSES), fn ($q) => $q->where('status', $status))
+            ->when($search !== '', fn ($q) => $q->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('author', 'like', "%{$search}%");
+            }))
             ->latest()
             ->get();
 
-        return view('books.index', compact('books', 'status'));
+        return view('books.index', compact('books', 'status', 'search'));
     }
 
     public function create()

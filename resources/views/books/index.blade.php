@@ -11,6 +11,14 @@
         <a class="btn" href="{{ route('books.create') }}">+ Add book</a>
     </div>
 
+    <form method="GET" action="{{ route('books.index') }}" class="search">
+        @if ($status)
+            <input type="hidden" name="status" value="{{ $status }}">
+        @endif
+        <input type="text" name="search" value="{{ $search }}" placeholder="Search by title or author">
+        <button type="submit">Search</button>
+    </form>
+
     @if ($books->isEmpty())
         <p class="empty">No books yet</p>
     @else
